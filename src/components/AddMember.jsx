@@ -1,6 +1,7 @@
 import { useState } from "react";
+import {FaChevronDown } from "react-icons/fa6"
 
-const AddMember = ({users, showMemberForm, setShowMemberForm, selectedClass, loadingUsers, selectedClassId, submittingMember, members,  setSubmittingMember, setMembers, toast }) => {
+const AddMember = ({users, showMemberForm, setShowMemberForm, selectedClass, loadingUsers, selectedClassId, submittingMember, members,  setSubmittingMember, setMembers, toast, setShowStaffForm }) => {
     const [selectedUserIds, setSelectedUserIds] = useState([]);
     const [memberSearchTerm, setMemberSearchTerm] = useState("");
     const [isMemberPickerOpen, setIsMemberPickerOpen] = useState(false);
@@ -99,7 +100,7 @@ const handleAddMember = async (event) => {
         });
 
       } catch (error) {
-        console.error(`Failed to add ${userId}:`, error);
+        toast.error(`Failed to add ${userId}:`, error);
 
         results.push({
           userId,
@@ -160,8 +161,6 @@ const handleAddMember = async (event) => {
       );
     }
 
-    console.log("Member submission results:", results);
-
   } catch (error) {
     console.error("Add members error:", error);
     toast.error(error.message || "Something went wrong.");
@@ -174,6 +173,27 @@ const handleAddMember = async (event) => {
   return (
 
 <>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">
+                    {selectedClass?.name} — Members
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    People enrolled in this action unit.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowMemberForm((current) => !current);
+                    setShowStaffForm(false);
+                  }}
+                  className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+                >
+                  {showMemberForm ? "Cancel" : "+ Add Member"}
+                </button>
+              </div>
     
                   {showMemberForm && (
                     <form
@@ -186,37 +206,26 @@ const handleAddMember = async (event) => {
     
                      
                      <div>
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Select Members
-  </label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                        Select Members
+                    </label>
 
-  {/* Selection trigger */}
-  <button
-    type="button"
-    onClick={() => setIsMemberPickerOpen((prev) => !prev)}
-    disabled={loadingUsers || !selectedClassId || submittingMember}
-    className="flex w-full items-center justify-between rounded-lg border border-slate-300 bg-white px-3 py-3 text-left outline-none transition focus:border-blue-500"
-  >
-    <span className="text-sm text-slate-600">
-      {loadingUsers
-        ? "Loading users..."
-        : selectedUserIds.length > 0
-        ? `${selectedUserIds.length} user(s) selected`
-        : "Search and select registered users"}
-    </span>
-
-    <svg
-      className={`h-5 w-5 text-slate-400 transition-transform ${
-        isMemberPickerOpen ? "rotate-180" : ""
-      }`}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  </button>
+                    {/* Selection trigger */}
+                    <button
+                        type="button"
+                        onClick={() => setIsMemberPickerOpen((prev) => !prev)}
+                        disabled={loadingUsers || !selectedClassId || submittingMember}
+                        className="flex w-full items-center justify-between rounded-lg border border-slate-300 bg-white px-3 py-3 text-left outline-none transition focus:border-blue-500"
+                    >
+                        <span className="text-sm text-slate-600">
+                        {loadingUsers
+                            ? "Loading users..."
+                            : selectedUserIds.length > 0
+                            ? `${selectedUserIds.length} user(s) selected`
+                            : "Search and select registered users"}
+                        </span>
+                        <FaChevronDown  className={`h-5 w-5 text-slate-400 transition-transform ${isMemberPickerOpen ? "rotate-180" : ""}`} />
+                    </button>
 
   {/* Searchable dropdown */}
   {isMemberPickerOpen && (

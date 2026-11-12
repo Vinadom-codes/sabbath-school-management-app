@@ -1741,82 +1741,9 @@ const csvContent = [
 
             {/* MEMBERS */}
             <section className="space-y-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h2 className="text-xl font-bold text-slate-900">
-                    {selectedClass?.name} — Members
-                  </h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    People enrolled in this action unit.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowMemberForm((current) => !current);
-                    setShowStaffForm(false);
-                  }}
-                  className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
-                >
-                  {showMemberForm ? "Cancel" : "+ Add Member"}
-                </button>
-              </div>
+             
               
-              <AddMember users= {users} showMemberForm = {showMemberForm } setShowMemberForm = {setShowMemberForm} selectedClass = {selectedClass } loadingUsers ={loadingUsers } selectedClassId= {selectedClassId} submittingMember ={submittingMember } members = {members }  setSubmittingMember= { setSubmittingMember} setMembers= {setMembers} toast = {toast}/>
-{/* 
-              {showMemberForm && (
-                <form
-                  onSubmit={handleAddMember}
-                  className="space-y-4 rounded-xl border border-blue-100 bg-white p-5 shadow-sm"
-                >
-                  <h3 className="font-semibold text-slate-900">
-                    Add Member to {selectedClass?.name}
-                  </h3>
-
-                 
-                  <div>
-                        <label
-                            htmlFor="member-user"
-                            className="mb-2 block text-sm font-medium text-slate-700"
-                        >
-                            Select Member
-                        </label>
-
-                        <select
-                            id="member-user"
-                            value={selectedUserId}
-                            onChange={(event) => setSelectedUserId(event.target.value)}
-                            required
-                            disabled={loadingUsers}
-                            className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-blue-500"
-                        >
-                            <option value="">
-                            {loadingUsers ? "Loading users..." : "Select a registered user"}
-                            </option>
-
-                            {users.map((user) => (
-                            <option key={user.id} value={user.id}>
-                                {user.first_name} {user.last_name}
-                            </option>
-                            ))}
-                        </select>
-                    </div>
-
-                  
-
-                  <button
-                    type="submit"
-                    disabled={submittingMember}
-                    className="inline-flex min-w-36 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {submittingMember && (
-                      <ClipLoader color="#ffffff" size={16} />
-                    )}
-                    {submittingMember ? "Adding..." : "Save Member"}
-                  </button>
-                </form>
-              )} */}
+              <AddMember users= {users} showMemberForm = {showMemberForm } setShowMemberForm = {setShowMemberForm} selectedClass = {selectedClass } loadingUsers ={loadingUsers } selectedClassId= {selectedClassId} submittingMember ={submittingMember } members = {members }  setSubmittingMember= { setSubmittingMember} setMembers= {setMembers} toast = {toast} setShowStaffForm = {setShowStaffForm}/>
 
               <DataTable
                 title="Class Members"

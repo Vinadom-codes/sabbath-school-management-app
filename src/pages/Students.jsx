@@ -571,7 +571,7 @@ const handleExportCSV = () => {
             </div>
 
             {/* Student form */}
-            <form onSubmit={handleAddStudent}>
+            <form onSubmit={handleAddStudent}  className="max-h-[80vh] overflow-y-auto p-4 space-y-4">
               <div className="space-y-5 px-6 py-6">
                 <div>
                   <label
