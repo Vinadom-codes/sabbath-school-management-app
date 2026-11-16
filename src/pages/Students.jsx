@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ClipLoader } from "react-spinners";
 // import { toast } from "react-toastify";
 import { ToastContainer, toast } from "react-toastify";
+import MemberTransfer from "../components/MemberTransfer";
 
 const API_URL = "http://localhost:8080/api/v1/users";
 
@@ -240,17 +241,14 @@ const handleExportCSV = () => {
   return (
     <section id="main" className="ml-0 min-h-screen min-w-0 bg-slate-50 px-4 py-6 sm:px-6 lg:ml-20 lg:px-8">
         <ToastContainer position="top-right" autoClose={3500} />
+
+        
+
       <div className="mx-auto max-w-7xl">
         {/* Page heading */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
-              Students
-            </h1>
-
-            <p className="mt-1 text-sm text-slate-500">
-              All registered Sabbath School students.
-            </p>
+           
           </div>
 
           <button
@@ -261,6 +259,22 @@ const handleExportCSV = () => {
             <span className="text-xl leading-none">+</span>
             Add a Sabbath School Student
           </button>
+        </div>
+
+        <MemberTransfer />
+
+        <div className="mb-2 mt-10">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
+              Students
+            </h1>
+
+            <p className="mt-1 text-sm text-slate-500">
+              All registered Sabbath School students.
+            </p>
+          </div>
+
+          
         </div>
 
         {/* Students table card */}

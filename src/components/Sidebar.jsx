@@ -84,16 +84,18 @@ const closeMobileSidebar = () => {
         
         <NavLink to="/class"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} ><FaSchool /><span>Classes & Teachers </span></NavLink>
 
+        {/* <NavLink to="/attendance"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}><FaCalendarCheck /><span>Attendance</span></NavLink>
         <NavLink to="/attendance"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}><FaCalendarCheck /><span>Attendance</span></NavLink>
 
 
-        <NavLink to="/reports"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} ><FaChartColumn /><span>Reports</span></NavLink>
+        <NavLink to="/reports"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} ><FaChartColumn /><span>Reports</span></NavLink> */}
 
         <p className="nav-section px-3 pb-2 pt-6 text-[10px] uppercase tracking-widest text-blue-100/50">
         Manage</p>
 
 
-        <NavLink to="/settings"  onClick={closeMobileSidebar} className="nav-link"><FaGear /><span>Settings</span></NavLink>
+        <a role="/settings" aria-disabled="true" onClick={closeMobileSidebar} className="nav-link"><FaGear /><span>Settings</span></a>
+        {/* <NavLink to="/settings"  onClick={closeMobileSidebar} className="nav-link"><FaGear /><span>Settings</span></NavLink> */}
       </nav>
 
       <div className="brand-copy m-3 rounded-xl border border-white/10 bg-white/5 p-3 text-xs">

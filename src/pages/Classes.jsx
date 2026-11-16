@@ -318,12 +318,13 @@ const handleSubmitAttendance = async (event) => {
   try {
     // Submit attendance records one after another
     for (const member of members) {
-      const payload = {
+      const payload = [ {
         attendance_date: attendanceDate,
         notes: attendanceDraft[member.id]?.notes?.trim() || "",
         status: attendanceDraft[member.id].status,
         user_id: member.user_id || member.id,
-      };
+      }
+      ];
 
       try {
         await apiRequest(
