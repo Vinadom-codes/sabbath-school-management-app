@@ -1,11 +1,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ClipLoader } from "react-spinners";
-// import { toast } from "react-toastify";
 import { ToastContainer, toast } from "react-toastify";
 import MemberTransfer from "../components/MemberTransfer";
 
-const API_URL = "http://localhost:8080/api/v1/users";
+const API_URL = "/request/api/v1/users";
 
 const emptyStudentForm = {
   email: "",
@@ -13,6 +12,7 @@ const emptyStudentForm = {
   last_name: "",
   phone: "",
   gender: "",
+  birth_date: "",
 };
 
 export default function Students() {
@@ -122,47 +122,50 @@ useEffect(() => {
     toast.error("Please select the student's gender.");
     return;
   }
-
+   
     setIsSubmitting(true);
 
     try {
+      const requestBody = {
+        first_name: studentForm.first_name.trim(),
+        last_name: studentForm.last_name.trim(),
+        gender: studentForm.gender.toUpperCase(),
+
+        // if email is not empty, add email to this object
+        ...(studentForm.email.trim() && {
+          email: studentForm.email.trim(),
+        }),
+
+        // if phone number is not emptyStudentForm, add phone number to this object
+        ...(studentForm.phone.trim() && {
+          phone: `+234${studentForm.phone.trim()}`,
+        }),
+
+        ...(studentForm.birth_date && {
+          birth_date:studentForm.birth_date,
+        }),
+      };
+
+
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: studentForm.email.trim(),
-          first_name: studentForm.first_name.trim(),
-          last_name: studentForm.last_name.trim(),
-          phone: studentForm.phone.trim(),
-          gender:studentForm.gender.toUpperCase(),
-        }),
+        body: JSON.stringify(requestBody),
       });
 
-      const responseText = await response.text();
-
-      let result = {};
-
-      try {
-        result = responseText ? JSON.parse(responseText) : {};
-      } catch {
+      const responseText = await response.json();
+        
+      if (!response.ok || responseText.status !== "ok") {
         throw new Error(
-         toast.error(`The server returned an invalid response (HTTP ${response.status}).`) 
-        );
-      }
-
-      if (!response.ok || result.status === "error") {
-          console.error("API error response:", result);
-        throw new Error(
-          toast.error( result.message || "Failed to add student.")
+          toast.error( "Failed to add student: Verify your inputs again!")
         );
       } 
-
-      toast.success("Student added successfully!");
-
-      setStudentForm({ ...emptyStudentForm });
-      setIsModalOpen(false);
+        
+        toast.success("Student added successfully!");
+        setStudentForm({ ...emptyStudentForm });
+        setIsModalOpen(false);
 
       // Refresh the table to include the new student.
       await fetchStudents();
@@ -370,6 +373,9 @@ const handleExportCSV = () => {
                   <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
                     GENDER
                   </th>
+                  <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    BIRTH DAY
+                  </th>
                 </tr>
               </thead>
 
@@ -419,6 +425,7 @@ const handleExportCSV = () => {
 
                      
                       <td className="px-3 py-2 text-sm text-slate-600"> {student.gender || "—"}</td>
+                      <td className="px-3 py-2 text-sm text-slate-600"> {student.birth_date || "—"}</td>
                     </tr>
                   ))
                 ) : (
@@ -649,7 +656,6 @@ const handleExportCSV = () => {
                     value={studentForm.email}
                     onChange={handleInputChange}
                     placeholder="student@example.com"
-                    required
                     maxLength={254}
                     disabled={isSubmitting}
                     className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
@@ -671,38 +677,54 @@ const handleExportCSV = () => {
                     autoComplete="tel"
                     value={studentForm.phone}
                     onChange={handleInputChange}
-                    placeholder="+2349024420018"
-                    pattern="^\+[1-9]\d{1,14}$"
-                    title="Enter a valid international phone number, e.g. +2349024420018"
-                    required
+                    placeholder="09024420018"
+                    // pattern="^\+[1-9]\d{1,14}$"
+                    // title="Enter a valid international phone number, e.g. +2349024420018"
                     maxLength={16}
                     disabled={isSubmitting}
                     className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
                 />
                 </div>
-                <div>
-                      
-                    <label
-                        htmlFor="gender"
-                        className="mb-2 block text-sm font-medium text-slate-700"
-                    >
-                        Gender <span className="text-red-500">*</span>
-                    </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>  
+                        <label
+                            htmlFor="gender"
+                            className="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Gender <span className="text-red-500">*</span>
+                        </label>
 
-                    <select
-                        id="gender"
-                        name="gender"
-                        value={studentForm.gender}
+                        <select
+                            id="gender"
+                            name="gender"
+                            value={studentForm.gender}
+                            onChange={handleInputChange}
+                            required
+                            disabled={isSubmitting}
+                            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Date of Birth
+                      </label>
+
+                      <input
+                        type="date"
+                        name="birth_date"
+                        value={studentForm.birth_date}
                         onChange={handleInputChange}
-                        required
-                        disabled={isSubmitting}
-                        className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    >
-                        <option value="">Select gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-
+                        max={new Date().toISOString().split("T")[0]}
+                        className="w-full px-4 py-3 border border-slate-200
+                        rounded-xl outline-none focus:border-blue-500
+                        focus:ring-2 focus:ring-blue-100 transition"
+                      />
+                    </div>
                 </div>
               </div>
 

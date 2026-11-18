@@ -1,40 +1,7 @@
 import { useEffect, useState } from "react";
 import bible from '../assets/images/sabbath-bible-scene.png'
+import beatitudes from '../bibleText.json'
 
-const beatitudes = [
-  {
-    text: "Blessed are the poor in spirit: for theirs is the kingdom of heaven.",
-    reference: "Matthew 5:3",
-  },
-  {
-    text: "Blessed are they that mourn: for they shall be comforted.",
-    reference: "Matthew 5:4",
-  },
-  {
-    text: "Blessed are the meek: for they shall inherit the earth.",
-    reference: "Matthew 5:5",
-  },
-  {
-    text: "Blessed are they which do hunger and thirst after righteousness: for they shall be filled.",
-    reference: "Matthew 5:6",
-  },
-  {
-    text: "Blessed are the merciful: for they shall obtain mercy.",
-    reference: "Matthew 5:7",
-  },
-  {
-    text: "Blessed are the pure in heart: for they shall see God.",
-    reference: "Matthew 5:8",
-  },
-  {
-    text: "Blessed are the peacemakers: for they shall be called the children of God.",
-    reference: "Matthew 5:9",
-  },
-  {
-    text: "Blessed are they which are persecuted for righteousness' sake: for theirs is the kingdom of heaven.",
-    reference: "Matthew 5:10",
-  },
-];
 
 const Hero = () => {
 

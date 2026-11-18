@@ -10,7 +10,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import TransferMemberForm from "./TransferMemberForm";
 
-const API_URL = "http://localhost:8080/api/v1";
+const API_URL = "/request/api/v1";
 
 const ITEMS_PER_PAGE = 10;
 

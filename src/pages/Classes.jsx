@@ -5,13 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddMember from "../components/AddMember";
 
-const API_BASE = "http://localhost:8080/api/v1";
-
-const emptyMemberForm = {
-  class_name: "",
-  start_date: "",
-  end_date: "",
-};
+const API_BASE = "/request/api/v1";
 
 const emptyStaffForm = {
   user_id: "",
@@ -50,11 +44,7 @@ function getFullName(person) {
     .join(" ") || "Unnamed user";
 }
 
-function isValidUUID(value) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    value.trim()
-  );
-}
+
 
 function formatDate(value) {
   if (!value) return "—";
@@ -419,7 +409,7 @@ const fetchUsers = async () => {
   setLoadingUsers(true);
 
   try {
-    const response = await fetch("http://localhost:8080/api/v1/users");
+    const response = await fetch("/request/api/v1/users");
     const result = await response.json();
     
     if (!response.ok || result.status !== "ok") {
@@ -514,39 +504,6 @@ useEffect(() => {
     }
   }, []);
 
-
-// const fetchStaff = useCallback(async (classId) => {
-//   if (!classId) {
-//     setStaff([]);
-//     return;
-//   }
-
-//   setLoadingStaff(true);
-
-//   try {
-//     const result = await apiRequest(
-//       `/classes/${encodeURIComponent(classId)}/staffs`
-//     );
-
-//     console.log("Requested class ID:", classId);
-//     console.table(
-//       (result.data || []).map((person) => ({
-//         id: person.id,
-//         name: `${person.first_name} ${person.last_name}`,
-//         role: person.role,
-//       }))
-//     );
-
-//     setStaff(Array.isArray(result.data) ? result.data : []);
-//   } catch (error) {
-//     setStaff([]);
-//     toast.error(`Could not load staff: ${error.message}`);
-//   } finally {
-//     setLoadingStaff(false);
-//   }
-// }, []);
-
-
   // Whenever the selected class changes, reload its data.
   useEffect(() => {
     setMembersSearch("");
@@ -573,98 +530,6 @@ useEffect(() => {
   }, [selectedClassId, fetchAttendance]);
  
    
- // 4. Add an existing user to the selected class.
- 
-// const handleAddMember = async (event) => {
-//   event.preventDefault();
-
-//   // 1. Validate the selected Action Unit.
-//   if (!selectedClassId) {
-//     toast.error("Please select an Action Unit");
-//     return;
-//   }
-
-//   // 2. Validate the selected member.
-//   if (!selectedUserId) {
-//     toast.error("Please select a member");
-//     return;
-//   }
-
-//   // 3. Check whether the member already exists in this Action Unit.
-//   const memberExists = members.some(
-//     (member) => member.id === selectedUserId
-//   );
-
-//   if (memberExists) {
-//     toast.error("This member already belongs to the selected Action Unit.");
-//     return;
-//   }
-
-//   setSubmittingMember(true);
-
-//   try {
-//     // 4. Add the member to the selected Action Unit.
-//     const response = await fetch(
-//       `http://localhost:8080/api/v1/classes/${selectedClassId}/membership`,
-//       {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           user_id: selectedUserId,
-//         }),
-//       }
-//     );
-
-//     const result = await response.json();
-
-//     if (!response.ok || result.status !== "ok") {
-//       throw new Error(
-//         result.message || "Failed to add member to Action Unit."
-//       );
-//     }
-
-//     // 5. Find the selected member's name for the success message.
-//     const selectedMember = users.find(
-//       (user) => user.id === selectedUserId
-//     );
-
-//     const memberName = selectedMember
-//       ? `${selectedMember.first_name} ${selectedMember.last_name}`
-//       : "Member";
-
-//     toast.success(
-//       `${memberName} added to the Action Unit successfully!`
-//     );
-
-//     // 6. Reset the form.
-//     setSelectedUserId("");
-
-//     // 7. Fetch the updated membership list.
-//     const membersResponse = await fetch(
-//       `http://localhost:8080/api/v1/classes/${selectedClassId}/membership`
-//     );
-
-//     const membersResult = await membersResponse.json();
-
-//     if (membersResponse.ok && membersResult.status === "ok") {
-//       setMembers(
-//         Array.isArray(membersResult.data)
-//           ? membersResult.data
-//           : []
-//       );
-//     }
-
-//   } catch (error) {
-//     console.error("Add member error:", error);
-//     toast.error(error.message || "Something went wrong.");
-//   } finally {
-//     setSubmittingMember(false);
-//   }
-// };
-
-
 // Handle Add Staff
 const handleAddStaff = async (event) => {
   event.preventDefault();
@@ -702,7 +567,7 @@ if (staffExists) {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/classes/${selectedClass.id}/staffs`,
+      `/request/api/v1/classes/${selectedClass.id}/staffs`,
       {
         method: "POST",
         headers: {
@@ -727,10 +592,10 @@ if (staffExists) {
     toast.success(
       `Staff added to ${selectedClass.name} successfully!`
     );
-
+    setShowStaffForm(false);
     // Fetch the updated staff list
     const staffResponse = await fetch(
-      `http://localhost:8080/api/v1/classes/${selectedClass.id}/staffs`
+      `/request/api/v1/classes/${selectedClass.id}/staffs`
     );
 
     const staffResult = await staffResponse.json();
@@ -782,7 +647,7 @@ const handleCreateClass = async (event) => {
 
   try {
     const response = await fetch(
-      "http://localhost:8080/api/v1/classes",
+      "/request/api/v1/classes",
       {
         method: "POST",
         headers: {
@@ -799,7 +664,6 @@ const handleCreateClass = async (event) => {
 
     const result = await response.json();
 
-    console.log("Create class response:", result);
 
     if (!response.ok || result.status !== "ok") {
       throw new Error(
@@ -824,119 +688,6 @@ const handleCreateClass = async (event) => {
 
 // EXPORT CLASS UNIT
 const handleExportActionUnit = () => {
-//   if (!selectedClass) {
-//     toast.error("Please select an Action Unit.");
-//     return;
-//   }
-
-//   if (members.length === 0 && staff.length === 0) {
-//     toast.error("No staff or members available to export.");
-//     return;
-//   }
-
-//   // Get IDs of users already in the members list
-//   const memberIds = new Set(
-//     members.map((member) => member.id)
-//   );
-
-//   // Exclude staff who are already listed as members
-//   const uniqueStaff = staff.filter(
-//     (person) => !memberIds.has(person.id)
-//   );
-
-//   // Combine staff first, followed by regular members
-//   const exportData = [
-//     ...uniqueStaff.map((person) => ({
-//       name: getFullName(person),
-//       category: "STAFF",
-//       role: person.role || "",
-//       email: person.email || "",
-//       phone: person.phone ? `="${person.phone}"` : "",
-//     })),
-
-//     ...members.map((person) => ({
-//       name: getFullName(person),
-//       category: "MEMBER",
-//       role: "",
-//       email: person.email || "",
-//       phone: person.phone ? `="${person.phone}"` : "",
-//     })),
-//   ];
-
-// // Get IDs of users already in the members list
-// const memberIds = new Set(
-//   members.map((member) => member.id)
-// );
-
-// // Remove staff who are already listed as members
-// const uniqueStaff = staff.filter(
-//   (person) => !memberIds.has(person.id)
-// );
-
-// // Sort staff by role
-// const sortedStaff = [...uniqueStaff].sort((a, b) => {
-//   const roleOrder = {
-//     teacher: 1,
-//     "leader 1": 2,
-//     "leader 2": 3,
-//   };
-
-//   return (
-//     (roleOrder[a.role?.toLowerCase()] || 99) -
-//     (roleOrder[b.role?.toLowerCase()] || 99)
-//   );
-// });
-
-// // Staff first, followed by regular members
-// const exportData = [
-//   ...sortedStaff.map((person) => ({
-//     name: getFullName(person),
-//     category: "STAFF",
-//     role: person.role || "Staff",
-//     email: person.email || "",
-//     phone: person.phone || "",
-//   })),
-
-//   ...members.map((person) => ({
-//     name: getFullName(person),
-//     category: "MEMBER",
-//     role: "",
-//     email: person.email || "",
-//     phone: person.phone || "",
-//   })),
-// ];
-
-// console.log(staff.map(person => ({
-//   name: getFullName(person),
-//   role: person.role
-// })));
-//   // CSV escaping helper
-//   const escapeCSV = (value) => {
-//     const text = String(value ?? "");
-//     return `"${text.replace(/"/g, '""')}"`;
-//   };
-
-//   // Create CSV content
-//   const title = `MEMBERS OF ${selectedClass.name.toUpperCase()}`;
-
-//   const headers = [
-//     "S/N",
-//     "NAME",
-//     "CATEGORY",
-//     "ROLE",
-//     "EMAIL",
-//     "PHONE NUMBER",
-//   ];
-
-//   const rows = exportData.map((person, index) => [
-//     index + 1,
-//     person.name,
-//     person.category,
-//     person.role,
-//     person.email,
-//     person.phone ? `="${person.phone}"` : "",
-//   ]);
-
     // Get IDs of all staff members
 const staffIds = new Set(
   staff.map((person) => person.id)

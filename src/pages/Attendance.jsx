@@ -4,7 +4,7 @@ import { ClipLoader } from "react-spinners";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const API_BASE_URL = "http://localhost:8080/api/v1";
+const API_BASE_URL = "/request/api/v1";
 
 const ATTENDANCE_OPTIONS = ["Present", "Absent", "Sick"];
 

@@ -2,11 +2,11 @@ import { useCallback,useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
-import {FaBookOpen, FaAnglesRight, FaAnglesLeft, FaTableColumns, FaUsers, FaCalendarCheck, FaSchool, FaChartColumn, FaGear, FaUserCheck} from 'react-icons/fa6'
+import {FaAnglesRight, FaAnglesLeft, FaTableColumns, FaUsers,  FaSchool,  FaGear, } from 'react-icons/fa6'
 import logo from '../assets/images/adventist-logo.svg'
 import Main from "../components/Main"
 
-const API_URLl = "http://localhost:8080/api/v1/users";
+const API_URLl = "/request/api/v1/users";
 const Sidebar = () => {
     const [isToggled, setIsToggled] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -80,7 +80,12 @@ const closeMobileSidebar = () => {
         
         <NavLink to="/"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} ><FaTableColumns/>  <span>Dashboard</span></NavLink>
 
-        <NavLink to="/students"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} ><FaUsers /><span>Students</span><small>{students.length}</small></NavLink>
+        <NavLink to="/students"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} ><FaUsers /><span>Students</span><small>{isLoading
+                        ? <ClipLoader
+                          color="#2563eb"
+                          size={35}
+                          aria-label="Loading students"
+                        /> : students.length}</small></NavLink>
         
         <NavLink to="/class"  onClick={closeMobileSidebar} className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} ><FaSchool /><span>Classes & Teachers </span></NavLink>
 

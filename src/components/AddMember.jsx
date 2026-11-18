@@ -12,8 +12,7 @@ const AddMember = ({users, showMemberForm, setShowMemberForm, selectedClass, loa
 
             const fullName = `${user.first_name || ""} ${user.last_name || ""}`.toLowerCase();
             return (
-                fullName.includes(search) ||
-                (user.email || "").toLowerCase().includes(search) ||
+                fullName.includes(search) || (user.email || "").toLowerCase().includes(search) ||
                 (user.phone || "").toLowerCase().includes(search)
             );
     });
@@ -60,6 +59,20 @@ const handleAddMember = async (event) => {
     return;
   }
 
+  // Check whether the selected Action Unit has expired.
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(selectedClass.period_end);
+    endDate.setHours(0, 0, 0, 0);
+      
+    if (endDate < today) {
+      toast.error(
+        "This Action Unit has expired and can no longer accept new members. Please check its validity period."
+      );
+      return;
+    }
+
   setSubmittingMember(true);
 
   const results = [];
@@ -71,7 +84,7 @@ const handleAddMember = async (event) => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/v1/classes/${encodeURIComponent(selectedClassId)}/membership`,
+          `/request/api/v1/classes/${encodeURIComponent(selectedClassId)}/membership`,
           {
             method: "POST",
             headers: {
@@ -112,10 +125,10 @@ const handleAddMember = async (event) => {
         });
       }
     }
-    setShowMemberForm(false);
+    
     // Refresh membership list after all requests.
     const membersResponse = await fetch(
-      `http://localhost:8080/api/v1/classes/${encodeURIComponent(selectedClassId)}/membership`
+      `/request/api/v1/classes/${encodeURIComponent(selectedClassId)}/membership`
     );
 
     const membersResult = await membersResponse.json();
@@ -151,6 +164,7 @@ const handleAddMember = async (event) => {
 
       setMemberSearchTerm("");
       setIsMemberPickerOpen(false);
+      setShowMemberForm(false);
     } else if (successful.length > 0) {
       toast.warning(
         `${successful.length} member(s) added; ${failed.length} failed. You can retry the failed members.`
@@ -298,7 +312,7 @@ const handleAddMember = async (event) => {
                   </p>
 
                   <p className="truncate text-xs text-slate-500">
-                    {user.email || user.phone || "No contact information"}
+                    {user.phone || user.email || "No contact information"}
                   </p>
                 </div>
 
